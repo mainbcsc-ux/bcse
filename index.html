@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSE | Stop Learning. Start Building.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0A0F1E',
+                        darker: '#050810',
+                        card: '#111827',
+                        navy: '#0C447C',
+                        teal: '#1D9E75',
+                        light: '#EAEAEA',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0A0F1E;
+            color: #EAEAEA;
+            overflow-x: hidden;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(to right, #FFFFFF, #1D9E75);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background-color: #1D9E75;
+            box-shadow: 0 0 20px rgba(29, 158, 117, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #168560;
+            box-shadow: 0 0 30px rgba(29, 158, 117, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            border-color: #1D9E75;
+            background-color: rgba(29, 158, 117, 0.05);
+        }
+
+        .card-hover {
+            transition: all 0.2s ease-out;
+            transform-style: preserve-3d;
+        }
+        .card-hover:hover {
+            border-color: #1D9E75;
+            box-shadow: 0 15px 35px -10px rgba(29, 158, 117, 0.2);
+        }
+
+        .highlight-box {
+            background: linear-gradient(180deg, rgba(12, 68, 124, 0.2) 0%, rgba(10, 15, 30, 0) 100%);
+            border: 1px solid rgba(29, 158, 117, 0.4);
+            box-shadow: inset 0 0 20px rgba(29, 158, 117, 0.05);
+        }
+
+        /* Abstract Network Animation */
+        .node { fill: #1D9E75; animation: pulse-node 2s infinite alternate; }
+        .link { stroke: #0C447C; stroke-width: 2; stroke-dasharray: 100; animation: dash 5s linear infinite; }
+        @keyframes dash { to { stroke-dashoffset: -200; } }
+        @keyframes pulse-node {
+            0% { r: 4; filter: drop-shadow(0 0 5px rgba(29,158,117,0.5)); }
+            100% { r: 6; filter: drop-shadow(0 0 15px rgba(29,158,117,1)); }
+        }
+        
+        /* Grid Background */
+        .bg-grid {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* --- Interactive Additions --- */
+        
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Interactive FAQ */
+        .faq-answer {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease-out;
+        }
+        .faq-answer.open {
+            grid-template-rows: 1fr;
+        }
+        .faq-answer-inner {
+            overflow: hidden;
+        }
+        
+        /* Mouse Glow */
+        .mouse-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(29, 158, 117, 0.06) 0%, rgba(10, 15, 30, 0) 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Lang Toggle Animation */
+        .lang-fade {
+            animation: textFade 0.3s ease-in-out;
+        }
+        @keyframes textFade {
+            0% { opacity: 0; transform: translateY(-2px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-teal selection:text-white relative">
+    
+    <!-- Mouse Follower Glow -->
+    <div class="mouse-glow hidden md:block" id="mouseGlow"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 border-b border-white/5 bg-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-teal rounded flex items-center justify-center font-bold text-white tracking-tighter">
+                    BC
+                </div>
+                <span class="font-bold text-xl tracking-tight text-white">BCSE</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#problem" class="hover:text-white transition-colors i18n" 
+                   data-en="The Problem" data-bn="সমস্যা">The Problem</a>
+                <a href="#how-it-works" class="hover:text-white transition-colors i18n"
+                   data-en="How It Works" data-bn="কীভাবে কাজ করে">How It Works</a>
+                <a href="#roles" class="hover:text-white transition-colors i18n"
+                   data-en="Roles" data-bn="রোলসমূহ">Roles</a>
+                
+                <!-- Language Toggle -->
+                <button id="langToggle" class="flex items-center gap-2 bg-card border border-white/10 rounded-full px-3 py-1.5 hover:border-teal transition-colors">
+                    <i data-lucide="globe" class="w-4 h-4 text-teal"></i>
+                    <span id="currentLangText" class="text-white text-xs font-bold tracking-widest">EN</span>
+                </button>
+            </div>
+            
+            <a href="#apply" class="btn-primary text-sm px-5 py-2.5 rounded-md font-semibold text-white i18n"
+               data-en="Apply Now" data-bn="অ্যাপ্লাই করুন">
+                Apply Now
+            </a>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 bg-grid z-0"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-navy/20 rounded-full blur-[120px] -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal/30 bg-teal/10 text-teal text-xs font-semibold tracking-wide uppercase mb-6 i18n"
+                     data-en="<span class='w-2 h-2 rounded-full bg-teal animate-pulse'></span> Cohort 1 — Limited Seats" 
+                     data-bn="<span class='w-2 h-2 rounded-full bg-teal animate-pulse'></span> কোহর্ট ১ — সীমিত আসন">
+                    <span class="w-2 h-2 rounded-full bg-teal animate-pulse"></span>
+                    Cohort 1 — Limited Seats
+                </div>
+                
+                <h1 class="text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6 i18n"
+                    data-en="Stop Learning.<br><span class='text-gradient'>Start Building.</span>"
+                    data-bn="শেখা বন্ধ করুন।<br><span class='text-gradient'>নির্মাণ শুরু করুন।</span>">
+                    Stop Learning.<br>
+                    <span class="text-gradient">Start Building.</span>
+                </h1>
+                
+                <p class="text-lg text-gray-400 mb-8 max-w-xl leading-relaxed i18n"
+                   data-en="BCSE helps ambitious people in Bangladesh turn ideas into real startups through team, system, accountability, and rigorous execution."
+                   data-bn="BCSE বাংলাদেশের উচ্চাকাঙ্ক্ষী তরুণদের সঠিক টিম, সিস্টেম এবং জবাবদিহিতার মাধ্যমে আইডিয়া থেকে বাস্তব স্টার্টআপ তৈরি করতে সাহায্য করে।">
+                    BCSE helps ambitious people in Bangladesh turn ideas into real startups through team, system, accountability, and rigorous execution.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                    <a href="#apply" class="btn-primary flex justify-center items-center gap-2 px-8 py-4 rounded-lg font-semibold text-white text-lg">
+                        <span class="i18n" data-en="Apply Now" data-bn="অ্যাপ্লাই করুন">Apply Now</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#how-it-works" class="btn-secondary flex justify-center items-center gap-2 px-8 py-4 rounded-lg font-semibold text-white text-lg i18n"
+                       data-en="See How It Works" data-bn="প্রসেসটি দেখুন">
+                        See How It Works
+                    </a>
+                </div>
+                
+                <div class="text-sm font-medium tracking-widest text-gray-500 uppercase flex items-center gap-4 i18n"
+                     data-en="<span>Build</span> <span class='w-1 h-1 rounded-full bg-gray-500'></span> <span>Create</span> <span class='w-1 h-1 rounded-full bg-gray-500'></span> <span>Ship</span> <span class='w-1 h-1 rounded-full bg-teal'></span> <span class='text-teal'>Execute</span>"
+                     data-bn="<span>বিল্ড</span> <span class='w-1 h-1 rounded-full bg-gray-500'></span> <span>ক্রিয়েট</span> <span class='w-1 h-1 rounded-full bg-gray-500'></span> <span>শিপ</span> <span class='w-1 h-1 rounded-full bg-teal'></span> <span class='text-teal'>এক্সিকিউট</span>">
+                    <span>Build</span> <span class="w-1 h-1 rounded-full bg-gray-500"></span>
+                    <span>Create</span> <span class="w-1 h-1 rounded-full bg-gray-500"></span>
+                    <span>Ship</span> <span class="w-1 h-1 rounded-full bg-teal"></span>
+                    <span class="text-teal">Execute</span>
+                </div>
+            </div>
+            
+            <!-- Abstract Hero Visual -->
+            <div class="reveal relative w-full aspect-square max-w-[500px] mx-auto lg:ml-auto border border-white/5 bg-card/50 rounded-2xl flex items-center justify-center p-8 overflow-hidden backdrop-blur-sm shadow-2xl">
+                <svg width="100%" height="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 50 200 L 150 100 L 250 150 L 350 100" class="link" fill="none"/>
+                    <path d="M 50 200 L 150 300 L 250 250 L 350 300" class="link" fill="none"/>
+                    <path d="M 150 100 L 150 300" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+                    <path d="M 250 150 L 250 250" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+                    <path d="M 150 100 L 250 250" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+                    <circle cx="50" cy="200" r="5" fill="#4B5563"/>
+                    <circle cx="150" cy="100" r="5" class="node" style="animation-delay: 0s;"/>
+                    <circle cx="150" cy="300" r="5" class="node" style="animation-delay: 0.5s;"/>
+                    <circle cx="250" cy="150" r="5" class="node" style="animation-delay: 1s;"/>
+                    <circle cx="250" cy="250" r="5" class="node" style="animation-delay: 1.5s;"/>
+                    <rect x="330" y="80" width="40" height="40" rx="8" fill="#0C447C" stroke="#1D9E75" stroke-width="2" class="animate-pulse-slow"/>
+                    <rect x="330" y="280" width="40" height="40" rx="8" fill="#0C447C" stroke="#1D9E75" stroke-width="2" class="animate-pulse-slow"/>
+                    <circle cx="50" cy="200" r="3" fill="#FFF"><animateMotion path="M 0 0 L 100 -100 L 200 -50 L 300 -100" dur="3s" repeatCount="indefinite" /></circle>
+                    <circle cx="50" cy="200" r="3" fill="#FFF"><animateMotion path="M 0 0 L 100 100 L 200 50 L 300 100" dur="4s" repeatCount="indefinite" /></circle>
+                </svg>
+                <div class="absolute bottom-6 bg-dark/80 backdrop-blur border border-white/10 px-4 py-2 rounded-md text-xs text-gray-400 font-mono">
+                    > System.Execute()
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. THE PROBLEM -->
+    <section id="problem" class="py-24 bg-darker border-t border-white/5 z-10 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6 i18n"
+                    data-en="Why Most Talented People Still Never Build Anything"
+                    data-bn="কেন এত ট্যালেন্ট থাকার পরও কিছু তৈরি হয় না">
+                    Why Most Talented People Still Never Build Anything
+                </h2>
+                <p class="text-lg text-gray-400 leading-relaxed i18n"
+                   data-en="It is not a lack of talent. It is not a lack of ideas. It is not a lack of ambition. The real problem is an absence of structure."
+                   data-bn="সমস্যা ট্যালেন্ট বা আইডিয়ার নয়। আসল সমস্যা হলো সঠিক স্ট্রাকচার ও সিস্টেমের অভাব।">
+                    It is not a lack of talent. It is not a lack of ideas. It is not a lack of ambition. The real problem is an absence of structure.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <!-- Card 1 -->
+                <div class="bg-card border border-white/5 rounded-xl p-8 card-hover card-tilt relative overflow-hidden group reveal" style="transition-delay: 100ms;">
+                    <div class="w-12 h-12 bg-dark rounded-lg flex items-center justify-center border border-white/10 mb-6 group-hover:border-teal/50 transition-colors">
+                        <i data-lucide="user-x" class="text-gray-400 group-hover:text-teal transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 i18n" data-en="Working Alone" data-bn="একাকী কাজ করা">Working Alone</h3>
+                    <p class="text-gray-400 text-sm i18n" 
+                       data-en="Building in isolation leads to burnout. Without a balanced team, you carry the weight of roles you aren't skilled at."
+                       data-bn="একা কাজ করলে দ্রুত বার্নআউট আসে। সঠিক টিম না থাকলে এমন অনেক দায়িত্ব নিতে হয়, যেগুলোতে আপনার স্কিল নেই।">
+                       Building in isolation leads to burnout. Without a balanced team, you carry the weight of roles you aren't skilled at.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-card border border-white/5 rounded-xl p-8 card-hover card-tilt relative overflow-hidden group reveal" style="transition-delay: 200ms;">
+                    <div class="w-12 h-12 bg-dark rounded-lg flex items-center justify-center border border-white/10 mb-6 group-hover:border-teal/50 transition-colors">
+                        <i data-lucide="map" class="text-gray-400 group-hover:text-teal transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 i18n" data-en="No Clear System" data-bn="সঠিক সিস্টেমের অভাব">No Clear System</h3>
+                    <p class="text-gray-400 text-sm i18n"
+                       data-en="You have the idea, but no roadmap. Without validation frameworks and execution sprints, ideas remain just concepts."
+                       data-bn="আইডিয়া আছে, কিন্তু রোডম্যাপ নেই। সঠিক ভ্যালিডেশন আর এক্সিকিউশন ফ্রেমওয়ার্ক ছাড়া আইডিয়া শুধু চিন্তাতেই থেকে যায়।">
+                       You have the idea, but no roadmap. Without validation frameworks and execution sprints, ideas remain just concepts.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-card border border-white/5 rounded-xl p-8 card-hover card-tilt relative overflow-hidden group reveal" style="transition-delay: 300ms;">
+                    <div class="w-12 h-12 bg-dark rounded-lg flex items-center justify-center border border-white/10 mb-6 group-hover:border-teal/50 transition-colors">
+                        <i data-lucide="clock" class="text-gray-400 group-hover:text-teal transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 i18n" data-en="No Accountability" data-bn="জবাবদিহিতার অভাব">No Accountability</h3>
+                    <p class="text-gray-400 text-sm i18n"
+                       data-en="You start strong, but without deadlines, peer pressure, or weekly tracking, the momentum quietly dies."
+                       data-bn="শুরুটা ভালো হয়, কিন্তু ডেডলাইন ও ট্র্যাকিং না থাকায় ধীরে ধীরে কাজের গতি হারিয়ে যায়।">
+                       You start strong, but without deadlines, peer pressure, or weekly tracking, the momentum quietly dies.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-card border border-white/5 rounded-xl p-8 card-hover card-tilt relative overflow-hidden group reveal" style="transition-delay: 400ms;">
+                    <div class="w-12 h-12 bg-dark rounded-lg flex items-center justify-center border border-white/10 mb-6 group-hover:border-teal/50 transition-colors">
+                        <i data-lucide="package-x" class="text-gray-400 group-hover:text-teal transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 i18n" data-en="No Real Output" data-bn="কোনো বাস্তব ফলাফল নেই">No Real Output</h3>
+                    <p class="text-gray-400 text-sm i18n"
+                       data-en="You read books, take courses, and collect certificates. But months later, you still haven't shipped a product."
+                       data-bn="আপনি শুধু কোর্স করেন আর সার্টিফিকেট জমান। কিন্তু দিনশেষে কোনো বাস্তব প্রোডাক্ট লঞ্চ করা হয় না।">
+                       You read books, take courses, and collect certificates. But months later, you still haven't shipped a product.</p>
+                </div>
+            </div>
+
+            <div class="text-center p-8 bg-gradient-to-r from-dark to-card border border-white/10 rounded-xl reveal">
+                <p class="text-2xl md:text-3xl font-semibold text-white i18n"
+                   data-en="<span class='text-gray-500'>The harsh truth:</span> Potential without execution stays invisible."
+                   data-bn="<span class='text-gray-500'>সত্যিটা হলো:</span> এক্সিকিউশন ছাড়া যেকোনো সম্ভাবনা মূল্যহীন।">
+                    <span class="text-gray-500">The harsh truth:</span> Potential without execution stays invisible.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. THE SOLUTION -->
+    <section class="py-24 border-t border-white/5 relative z-10">
+        <div class="absolute right-0 top-0 w-1/3 h-full bg-teal/5 blur-[150px] pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-12 gap-16 items-center">
+                <div class="lg:col-span-5 reveal">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6 i18n"
+                        data-en="BCSE Exists to Fix That." data-bn="BCSE ঠিক এই সমস্যার সমাধান করে।">
+                        BCSE Exists to Fix That.
+                    </h2>
+                    <p class="text-lg text-gray-400 mb-8 leading-relaxed i18n"
+                       data-en="We built BCSE to bridge the fatal gap between raw potential and actual execution. We provide the ecosystem, you provide the work."
+                       data-bn="আইডিয়া আর এক্সিকিউশনের মাঝের গ্যাপ পূরণ করতেই BCSE তৈরি করা হয়েছে। আমরা ইকোসিস্টেম দিচ্ছি, আপনাকে কাজ করতে হবে।">
+                        We built BCSE to bridge the fatal gap between raw potential and actual execution. We provide the ecosystem, you provide the work.
+                    </p>
+                    
+                    <div class="highlight-box rounded-xl p-6 mb-8 hover:scale-[1.02] transition-transform">
+                        <p class="text-xl font-semibold text-white flex items-start gap-3 i18n"
+                           data-en="<i data-lucide='alert-triangle' class='text-teal w-6 h-6 shrink-0 mt-0.5'></i> This is not a course. This is a rigorous startup-building system."
+                           data-bn="<i data-lucide='alert-triangle' class='text-teal w-6 h-6 shrink-0 mt-0.5'></i> এটি কোনো কোর্স নয়। এটি একটি রিয়েল স্টার্টআপ-বিল্ডিং সিস্টেম।">
+                            <i data-lucide="alert-triangle" class="text-teal w-6 h-6 shrink-0 mt-0.5"></i>
+                            This is not a course. This is a rigorous startup-building system.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-7 grid sm:grid-cols-2 gap-4">
+                    <div class="bg-card/50 border border-white/5 p-6 rounded-lg flex gap-4 reveal" style="transition-delay: 100ms;">
+                        <div class="w-10 h-10 rounded bg-navy/30 flex items-center justify-center shrink-0 border border-navy/50">
+                            <i data-lucide="users" class="text-teal w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1 i18n" data-en="Real Team" data-bn="সঠিক টিম">Real Team</h4>
+                            <p class="text-sm text-gray-400 i18n" data-en="Matched with complementary builders to form a balanced execution unit." data-bn="স্কিল অনুযায়ী ব্যালেন্সড স্টার্টআপ টিম তৈরি করে দেওয়া হয়।">Matched with complementary builders to form a balanced execution unit.</p>
+                        </div>
+                    </div>
+                    <div class="bg-card/50 border border-white/5 p-6 rounded-lg flex gap-4 reveal" style="transition-delay: 200ms;">
+                        <div class="w-10 h-10 rounded bg-navy/30 flex items-center justify-center shrink-0 border border-navy/50">
+                            <i data-lucide="workflow" class="text-teal w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1 i18n" data-en="Structured Execution" data-bn="স্ট্রাকচার্ড এক্সিকিউশন">Structured Execution</h4>
+                            <p class="text-sm text-gray-400 i18n" data-en="Step-by-step frameworks that remove guesswork from the building process." data-bn="কী বানাবেন আর কীভাবে বানাবেন, তার ধাপে ধাপে ফ্রেমওয়ার্ক।">Step-by-step frameworks that remove guesswork from the building process.</p>
+                        </div>
+                    </div>
+                    <div class="bg-card/50 border border-white/5 p-6 rounded-lg flex gap-4 reveal" style="transition-delay: 300ms;">
+                        <div class="w-10 h-10 rounded bg-navy/30 flex items-center justify-center shrink-0 border border-navy/50">
+                            <i data-lucide="search" class="text-teal w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1 i18n" data-en="Guided Validation" data-bn="সঠিক ভ্যালিডেশন">Guided Validation</h4>
+                            <p class="text-sm text-gray-400 i18n" data-en="Stop building blindly. We force you to talk to users and validate first." data-bn="আন্দাজে প্রোডাক্ট না বানিয়ে রিয়েল কাস্টমার ইন্টারভিউ দিয়ে ভ্যালিডেট করা।">Stop building blindly. We force you to talk to users and validate first.</p>
+                        </div>
+                    </div>
+                    <div class="bg-card/50 border border-white/5 p-6 rounded-lg flex gap-4 reveal" style="transition-delay: 400ms;">
+                        <div class="w-10 h-10 rounded bg-navy/30 flex items-center justify-center shrink-0 border border-navy/50">
+                            <i data-lucide="rocket" class="text-teal w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1 i18n" data-en="Startup Output" data-bn="স্টার্টআপ আউটপুট">Startup Output</h4>
+                            <p class="text-sm text-gray-400 i18n" data-en="The metric of success is a shipped product, not a completed syllabus." data-bn="সাফল্যের মাপকাঠি হলো প্রোডাক্ট লঞ্চ করা, সিলেবাস শেষ করা নয়।">The metric of success is a shipped product, not a completed syllabus.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. COMPARISON -->
+    <section class="py-24 bg-darker border-t border-white/5 z-10 relative">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4 i18n"
+                    data-en="Not Another Program. <br>A Real Build Environment."
+                    data-bn="আর দশটা প্রোগ্রামের মতো নয়। <br>এটি একটি রিয়েল বিল্ড এনভায়রনমেন্ট।">
+                    Not Another Program. <br>A Real Build Environment.
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Traditional -->
+                <div class="bg-card border border-white/5 rounded-2xl p-8 opacity-70 reveal">
+                    <h3 class="text-xl font-bold text-gray-400 mb-8 pb-4 border-b border-white/5 text-center i18n"
+                        data-en="Traditional Programs" data-bn="সাধারণ প্রোগ্রাম">Traditional Programs</h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-center gap-3 text-gray-400 i18n" data-en="Teach theory and frameworks" data-bn="থিওরি শেখায়"><i data-lucide="x" class="text-red-500/70 w-5 h-5 shrink-0"></i> Teach theory and frameworks</li>
+                        <li class="flex items-center gap-3 text-gray-400 i18n" data-en="Focus on certificates of completion" data-bn="সার্টিফিকেটের ওপর ফোকাস"><i data-lucide="x" class="text-red-500/70 w-5 h-5 shrink-0"></i> Focus on certificates of completion</li>
+                        <li class="flex items-center gap-3 text-gray-400 i18n" data-en="Individual, isolated participation" data-bn="একা অংশগ্রহণ করতে হয়"><i data-lucide="x" class="text-red-500/70 w-5 h-5 shrink-0"></i> Individual, isolated participation</li>
+                        <li class="flex items-center gap-3 text-gray-400 i18n" data-en="Low accountability & drop-offs" data-bn="জবাবদিহিতা নেই"><i data-lucide="x" class="text-red-500/70 w-5 h-5 shrink-0"></i> Low accountability & drop-offs</li>
+                        <li class="flex items-center gap-3 text-gray-400 i18n" data-en="No real startup outcome" data-bn="স্টার্টআপ তৈরি হয় না"><i data-lucide="x" class="text-red-500/70 w-5 h-5 shrink-0"></i> No real startup outcome</li>
+                    </ul>
+                </div>
+
+                <!-- BCSE -->
+                <div class="highlight-box rounded-2xl p-8 relative transform md:-translate-y-4 shadow-2xl reveal hover:scale-[1.02] transition-transform">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider i18n"
+                         data-en="The BCSE Standard" data-bn="BCSE স্ট্যান্ডার্ড">
+                        The BCSE Standard
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-8 pb-4 border-b border-teal/20 text-center i18n"
+                        data-en="BCSE System" data-bn="BCSE সিস্টেম">BCSE System</h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-center gap-3 text-white font-medium i18n" data-en="Build through rigorous execution" data-bn="কঠোর এক্সিকিউশনের মাধ্যমে নির্মাণ"><i data-lucide="check-circle-2" class="text-teal w-6 h-6 shrink-0"></i> Build through rigorous execution</li>
+                        <li class="flex items-center gap-3 text-white font-medium i18n" data-en="Focus purely on startup output" data-bn="সরাসরি স্টার্টআপ আউটপুটের ওপর ফোকাস"><i data-lucide="check-circle-2" class="text-teal w-6 h-6 shrink-0"></i> Focus purely on startup output</li>
+                        <li class="flex items-center gap-3 text-white font-medium i18n" data-en="Team-based, collaborative system" data-bn="টিম-ভিত্তিক কোলাবোরেটিভ সিস্টেম"><i data-lucide="check-circle-2" class="text-teal w-6 h-6 shrink-0"></i> Team-based, collaborative system</li>
+                        <li class="flex items-center gap-3 text-white font-medium i18n" data-en="Weekly strict accountability metrics" data-bn="সাপ্তাহিক জবাবদিহিতা ও ট্র্যাকিং"><i data-lucide="check-circle-2" class="text-teal w-6 h-6 shrink-0"></i> Weekly strict accountability metrics</li>
+                        <li class="flex items-center gap-3 text-white font-medium i18n" data-en="Real startup launch journey" data-bn="বাস্তব স্টার্টআপ লঞ্চ জার্নি"><i data-lucide="check-circle-2" class="text-teal w-6 h-6 shrink-0"></i> Real startup launch journey</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. HOW IT WORKS -->
+    <section id="how-it-works" class="py-24 border-t border-white/5 z-10 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6 i18n"
+                    data-en="A Clear System. A Real Journey." data-bn="একটি ক্লিয়ার সিস্টেম। একটি রিয়েল জার্নি।">
+                    A Clear System. A Real Journey.
+                </h2>
+                <p class="text-lg text-gray-400 i18n"
+                   data-en="BCSE is structured sequentially. You cannot move forward until you execute the current stage. Confusion is eliminated."
+                   data-bn="পুরো প্রোগ্রামটি ৪টি ধাপে বিভক্ত। একটি ধাপ শেষ না করে পরের ধাপে যাওয়া যায় না। কনফিউশনের কোনো জায়গা নেই।">
+                    BCSE is structured sequentially. You cannot move forward until you execute the current stage. Confusion is eliminated.
+                </p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <div class="hidden md:block absolute left-[50%] top-0 bottom-0 w-px bg-gradient-to-b from-teal/50 via-teal/20 to-transparent -translate-x-1/2"></div>
+
+                <div class="space-y-12 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 reveal">
+                        <div class="md:w-1/2 md:text-right order-2 md:order-1 hover:-translate-x-2 transition-transform">
+                            <h3 class="text-2xl font-bold text-white mb-2 i18n" data-en="1. Audition" data-bn="১. অডিশন">1. Audition</h3>
+                            <p class="text-gray-400 i18n"
+                               data-en="Application, skill tasks, and group interviews. We filter aggressively to ensure only committed builders enter the cohort."
+                               data-bn="আমরা সবাইকে নিই না। স্কিল, কমিটমেন্ট এবং মাইন্ডসেট চেক করে আমরা সেরা মেম্বারদের সিলেক্ট করি।">
+                               Application, skill tasks, and group interviews. We filter aggressively to ensure only committed builders enter the cohort.</p>
+                        </div>
+                        <div class="w-12 h-12 bg-dark border-2 border-teal rounded-full flex items-center justify-center shrink-0 order-1 md:order-2 shadow-[0_0_15px_rgba(29,158,117,0.3)] z-10 relative group">
+                            <span class="text-teal font-bold">01</span>
+                        </div>
+                        <div class="md:w-1/2 order-3 hidden md:block"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 reveal" style="transition-delay: 100ms;">
+                        <div class="md:w-1/2 order-3 md:order-1 hidden md:block"></div>
+                        <div class="w-12 h-12 bg-dark border-2 border-teal rounded-full flex items-center justify-center shrink-0 order-1 md:order-2 shadow-[0_0_15px_rgba(29,158,117,0.3)] z-10 relative">
+                            <span class="text-teal font-bold">02</span>
+                        </div>
+                        <div class="md:w-1/2 order-2 md:order-3 hover:translate-x-2 transition-transform">
+                            <h3 class="text-2xl font-bold text-white mb-2 i18n" data-en="2. Team Build" data-bn="২. টিম তৈরি">2. Team Build</h3>
+                            <p class="text-gray-400 i18n"
+                               data-en="Role assignment, team formation, and chemistry building. You are matched to form a balanced, multi-disciplinary startup team."
+                               data-bn="সিলেক্টেড মেম্বারদের স্কিল অনুযায়ী ৬ জনের একটি ব্যালেন্সড টিম তৈরি করে দেওয়া হয়।">
+                               Role assignment, team formation, and chemistry building. You are matched to form a balanced, multi-disciplinary startup team.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 reveal" style="transition-delay: 200ms;">
+                        <div class="md:w-1/2 md:text-right order-2 md:order-1 hover:-translate-x-2 transition-transform">
+                            <h3 class="text-2xl font-bold text-white mb-2 i18n" data-en="3. IdeaStation" data-bn="৩. আইডিয়া স্টেশন">3. IdeaStation</h3>
+                            <p class="text-gray-400 i18n"
+                               data-en="Problem hunt, customer interviews, and brutal idea validation. We kill bad ideas early before you waste months writing code."
+                               data-bn="আমরা সরাসরি সলিউশন বানাই না। আমরা রিয়েল কাস্টমার ইন্টারভিউয়ের মাধ্যমে মার্কেটের আসল সমস্যা খুঁজে বের করি এবং ভ্যালিডেট করি।">
+                               Problem hunt, customer interviews, and brutal idea validation. We kill bad ideas early before you waste months writing code.</p>
+                        </div>
+                        <div class="w-12 h-12 bg-dark border-2 border-teal rounded-full flex items-center justify-center shrink-0 order-1 md:order-2 shadow-[0_0_15px_rgba(29,158,117,0.3)] z-10 relative">
+                            <span class="text-teal font-bold">03</span>
+                        </div>
+                        <div class="md:w-1/2 order-3 hidden md:block"></div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 reveal" style="transition-delay: 300ms;">
+                        <div class="md:w-1/2 order-3 md:order-1 hidden md:block"></div>
+                        <div class="w-12 h-12 bg-dark border-2 border-teal rounded-full flex items-center justify-center shrink-0 order-1 md:order-2 shadow-[0_0_15px_rgba(29,158,117,0.3)] z-10 relative">
+                            <span class="text-teal font-bold">04</span>
+                        </div>
+                        <div class="md:w-1/2 order-2 md:order-3 hover:translate-x-2 transition-transform">
+                            <h3 class="text-2xl font-bold text-white mb-2 i18n" data-en="4. Execution Sprint" data-bn="৪. এক্সিকিউশন স্প্রিন্ট">4. Execution Sprint</h3>
+                            <p class="text-gray-400 i18n"
+                               data-en="Intensive build phase. Test, iterate, and launch to real users. Weekly metrics, deep accountability, pure execution."
+                               data-bn="ভ্যালিডেটেড আইডিয়াকে রিয়েল প্রোডাক্ট বা সার্ভিসে রূপ দিয়ে কাস্টমারের কাছে পৌঁছে দেওয়া হয়।">
+                               Intensive build phase. Test, iterate, and launch to real users. Weekly metrics, deep accountability, pure execution.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 flex justify-center reveal">
+                    <div class="inline-flex items-center gap-4 bg-teal/10 border border-teal/40 px-8 py-5 rounded-xl hover:scale-105 transition-transform cursor-default shadow-[0_0_30px_rgba(29,158,117,0.15)]">
+                        <i data-lucide="target" class="text-teal w-8 h-8"></i>
+                        <div class="i18n"
+                             data-en="<span class='block text-sm text-gray-400 uppercase tracking-widest font-semibold mb-1'>Final Outcome</span><span class='block text-2xl font-bold text-white'>1 Real, Launched Startup</span>"
+                             data-bn="<span class='block text-sm text-gray-400 uppercase tracking-widest font-semibold mb-1'>চূড়ান্ত ফলাফল</span><span class='block text-2xl font-bold text-white'>১টি রিয়েল, লঞ্চ হওয়া স্টার্টআপ</span>">
+                            <span class="block text-sm text-gray-400 uppercase tracking-widest font-semibold mb-1">Final Outcome</span>
+                            <span class="block text-2xl font-bold text-white">1 Real, Launched Startup</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. ROLES -->
+    <section id="roles" class="py-24 bg-darker border-t border-white/5 z-10 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6 i18n"
+                    data-en="Every Startup Needs Builders. <br>What's Your Role?"
+                    data-bn="নিজের স্কিল অনুযায়ী বেছে নাও <br>তোমার রোল">
+                    Every Startup Needs Builders. <br>What's Your Role?
+                </h2>
+                <p class="text-lg text-gray-400 i18n"
+                   data-en="There are no 'general participants' in BCSE. You enter to fulfill a specific role within your assigned team."
+                   data-bn="BCSE-তে 'সাধারণ অংশগ্রহণকারী' বলে কিছু নেই। তুমি একটি নির্দিষ্ট রোল নিয়ে টিমে কাজ করবে।">
+                    There are no "general participants" in BCSE. You enter to fulfill a specific role within your assigned team.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Role Cards -->
+                <div class="bg-card border border-white/5 p-6 rounded-xl hover:border-teal/50 card-hover card-tilt reveal">
+                    <i data-lucide="megaphone" class="text-teal w-8 h-8 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2 i18n" data-en="Marketing Lead" data-bn="মার্কেটিং লিড">Marketing Lead</h3>
+                    <p class="text-gray-400 text-sm i18n" data-en="Focus on growth, running campaigns, branding, and acquiring users." data-bn="কাস্টমার আনা, গ্রোথ এবং ব্র্যান্ড তৈরি করা।">Focus on growth, running campaigns, branding, and acquiring users.</p>
+                </div>
+                <div class="bg-card border border-white/5 p-6 rounded-xl hover:border-teal/50 card-hover card-tilt reveal" style="transition-delay: 100ms;">
+                    <i data-lucide="pen-tool" class="text-teal w-8 h-8 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2 i18n" data-en="Content Creator" data-bn="কন্টেন্ট ক্রিয়েটর">Content Creator</h3>
+                    <p class="text-gray-400 text-sm i18n" data-en="Master storytelling, create compelling assets, video, and copy." data-bn="স্টার্টআপের গল্প বলা এবং কন্টেন্ট তৈরি করা।">Master storytelling, create compelling assets, video, and copy.</p>
+                </div>
+                <div class="bg-card border border-white/5 p-6 rounded-xl hover:border-teal/50 card-hover card-tilt reveal" style="transition-delay: 200ms;">
+                    <i data-lucide="check-square" class="text-teal w-8 h-8 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2 i18n" data-en="Execution Lead" data-bn="এক্সিকিউশন লিড">Execution Lead</h3>
+                    <p class="text-gray-400 text-sm i18n" data-en="Manage operations, keep the team on schedule, and protect deadlines." data-bn="অপারেশনস চালানো এবং ডেডলাইন রক্ষা করা।">Manage operations, keep the team on schedule, and protect deadlines.</p>
+                </div>
+                <div class="bg-card border border-white/5 p-6 rounded-xl hover:border-teal/50 card-hover card-tilt reveal" style="transition-delay: 300ms;">
+                    <i data-lucide="code-2" class="text-teal w-8 h-8 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2 i18n" data-en="Tech / Product" data-bn="টেক / প্রোডাক্ট">Tech / Product</h3>
+                    <p class="text-gray-400 text-sm i18n" data-en="Architect the MVP, write the code, and build the actual product." data-bn="এমভিপি (MVP) প্রোডাক্ট বানানো এবং টেকনিক্যাল কাজ।">Architect the MVP, write the code, and build the actual product.</p>
+                </div>
+                <div class="bg-card border border-white/5 p-6 rounded-xl hover:border-teal/50 card-hover card-tilt reveal" style="transition-delay: 400ms;">
+                    <i data-lucide="bar-chart-3" class="text-teal w-8 h-8 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2 i18n" data-en="Finance & Legal" data-bn="ফাইন্যান্স এন্ড লিগ্যাল">Finance & Legal</h3>
+                    <p class="text-gray-400 text-sm i18n" data-en="Structure the business model, track unit economics, and handle setup." data-bn="রেভিনিউ মডেল ডিজাইন এবং কস্ট ম্যানেজমেন্ট।">Structure the business model, track unit economics, and handle setup.</p>
+                </div>
+                <div class="bg-card border border-white/5 p-6 rounded-xl hover:border-teal/50 card-hover card-tilt reveal" style="transition-delay: 500ms;">
+                    <i data-lucide="handshake" class="text-teal w-8 h-8 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2 i18n" data-en="Sales & BD" data-bn="সেলস এন্ড বিডি">Sales & BD</h3>
+                    <p class="text-gray-400 text-sm i18n" data-en="Hustle for the first clients, close deals, and build partnerships." data-bn="প্রথম কাস্টমার আনা এবং সেলস ক্লোজ করা।">Hustle for the first clients, close deals, and build partnerships.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. WHO THIS IS FOR / NOT FOR -->
+    <section class="py-24 border-t border-white/5 z-10 relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-16 text-center reveal i18n"
+                data-en="BCSE Is Not for Everyone." data-bn="BCSE সবার জন্য না।">
+                BCSE Is Not for Everyone.
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Left: Not For -->
+                <div class="bg-red-950/10 border border-red-900/30 p-8 rounded-2xl hover:border-red-500/50 transition-colors reveal">
+                    <h3 class="text-2xl font-bold text-red-400 mb-6 flex items-center gap-3 i18n"
+                        data-en="<i data-lucide='shield-alert' class='w-6 h-6'></i> Not For You If:"
+                        data-bn="<i data-lucide='shield-alert' class='w-6 h-6'></i> যাদের জন্য না:">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i> Not For You If:
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3 text-gray-400 i18n" data-en="<i data-lucide='x' class='text-red-500 w-5 h-5 shrink-0 mt-0.5'></i> You only want to collect certificates." data-bn="<i data-lucide='x' class='text-red-500 w-5 h-5 shrink-0 mt-0.5'></i> আপনি শুধু সার্টিফিকেট জমাতে চান।"><i data-lucide="x" class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i> You only want to collect certificates.</li>
+                        <li class="flex items-start gap-3 text-gray-400 i18n" data-en="<i data-lucide='x' class='text-red-500 w-5 h-5 shrink-0 mt-0.5'></i> You are looking for shortcuts." data-bn="<i data-lucide='x' class='text-red-500 w-5 h-5 shrink-0 mt-0.5'></i> আপনি কোনো শর্টকাট খুঁজছেন।"><i data-lucide="x" class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i> You are looking for shortcuts.</li>
+                        <li class="flex items-start gap-3 text-gray-400 i18n" data-en="<i data-lucide='x' class='text-red-500 w-5 h-5 shrink-0 mt-0.5'></i> You avoid pressure and accountability." data-bn="<i data-lucide='x' class='text-red-500 w-5 h-5 shrink-0 mt-0.5'></i> আপনি প্রেশার এবং জবাবদিহিতা এড়াতে চান।"><i data-lucide="x" class="text-red-500 w-5 h-5 shrink-0 mt-0.5"></i> You avoid pressure and accountability.</li>
+                    </ul>
+                </div>
+
+                <!-- Right: For -->
+                <div class="bg-teal/5 border border-teal/30 p-8 rounded-2xl relative shadow-[0_0_40px_rgba(29,158,117,0.05)] hover:border-teal transition-colors reveal" style="transition-delay: 200ms;">
+                    <h3 class="text-2xl font-bold text-teal mb-6 flex items-center gap-3 i18n"
+                        data-en="<i data-lucide='shield-check' class='w-6 h-6'></i> For You If:"
+                        data-bn="<i data-lucide='shield-check' class='w-6 h-6'></i> যাদের জন্য উপযুক্ত:">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i> For You If:
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3 text-white i18n" data-en="<i data-lucide='check' class='text-teal w-5 h-5 shrink-0 mt-0.5'></i> You are desperate to build something real." data-bn="<i data-lucide='check' class='text-teal w-5 h-5 shrink-0 mt-0.5'></i> আপনি বাস্তবে কিছু তৈরি করতে মরিয়া।"><i data-lucide="check" class="text-teal w-5 h-5 shrink-0 mt-0.5"></i> You are desperate to build something real.</li>
+                        <li class="flex items-start gap-3 text-white i18n" data-en="<i data-lucide='check' class='text-teal w-5 h-5 shrink-0 mt-0.5'></i> You thrive working in a team." data-bn="<i data-lucide='check' class='text-teal w-5 h-5 shrink-0 mt-0.5'></i> আপনি টিমে কাজ করতে ভালোবাসেন।"><i data-lucide="check" class="text-teal w-5 h-5 shrink-0 mt-0.5"></i> You thrive working in a team.</li>
+                        <li class="flex items-start gap-3 text-white i18n" data-en="<i data-lucide='check' class='text-teal w-5 h-5 shrink-0 mt-0.5'></i> You are ready to execute relentlessly." data-bn="<i data-lucide='check' class='text-teal w-5 h-5 shrink-0 mt-0.5'></i> আপনি একটানা এক্সিকিউট করতে প্রস্তুত।"><i data-lucide="check" class="text-teal w-5 h-5 shrink-0 mt-0.5"></i> You are ready to execute relentlessly.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. VALUE / OUTCOME -->
+    <section class="py-24 bg-darker border-t border-white/5 z-10 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-16 text-center reveal i18n"
+                data-en="What You Actually Get" data-bn="আপনি আসলে কী পাবেন">
+                What You Actually Get
+            </h2>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                <div class="bg-card p-6 border border-white/5 rounded-xl hover:-translate-y-1 transition-transform reveal">
+                    <h4 class="text-white font-bold mb-2 i18n" data-en="Execution Environment" data-bn="এক্সিকিউশন এনভায়রনমেন্ট">Execution Environment</h4>
+                    <p class="text-gray-400 text-sm i18n" data-en="An uncompromising space where output is the only metric." data-bn="এমন একটি পরিবেশ যেখানে শুধু আউটপুটকেই গুরুত্ব দেওয়া হয়।">An uncompromising space where output is the only metric.</p>
+                </div>
+                <div class="bg-card p-6 border border-white/5 rounded-xl hover:-translate-y-1 transition-transform reveal" style="transition-delay: 100ms;">
+                    <h4 class="text-white font-bold mb-2 i18n" data-en="Co-Builder Ecosystem" data-bn="কো-বিল্ডার ইকোসিস্টেম">Co-Builder Ecosystem</h4>
+                    <p class="text-gray-400 text-sm i18n" data-en="Direct access to a vetted network of ambitious talent." data-bn="উচ্চাকাঙ্ক্ষী ও যাচাইকৃত ট্যালেন্টদের সাথে সরাসরি নেটওয়ার্কিং।">Direct access to a vetted network of ambitious talent.</p>
+                </div>
+                <div class="bg-card p-6 border border-white/5 rounded-xl hover:-translate-y-1 transition-transform reveal" style="transition-delay: 200ms;">
+                    <h4 class="text-white font-bold mb-2 i18n" data-en="Validation Process" data-bn="ভ্যালিডেশন প্রসেস">Validation Process</h4>
+                    <p class="text-gray-400 text-sm i18n" data-en="Frameworks to ensure you build what people want." data-bn="এমন ফ্রেমওয়ার্ক যা নিশ্চিত করে আপনি সঠিক প্রোডাক্ট বানাচ্ছেন।">Frameworks to ensure you build what people want.</p>
+                </div>
+            </div>
+
+            <div class="text-center reveal">
+                <h3 class="text-2xl md:text-4xl font-extrabold text-white i18n"
+                    data-en="The goal is not to finish a program.<br><span class='text-teal'>The goal is to build something real.</span>"
+                    data-bn="লক্ষ্য কোনো প্রোগ্রাম শেষ করা নয়।<br><span class='text-teal'>লক্ষ্য হলো বাস্তবে কিছু তৈরি করা।</span>">
+                    The goal is not to finish a program.<br>
+                    <span class="text-teal">The goal is to build something real.</span>
+                </h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <section class="py-24 border-t border-white/5 z-10 relative">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mb-12 text-center reveal i18n"
+                data-en="Frequently Asked Questions" data-bn="সচরাচর জিজ্ঞাসিত প্রশ্ন">
+                Frequently Asked Questions
+            </h2>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="bg-card border border-white/5 rounded-xl p-6 cursor-pointer faq-item hover:border-teal/30 transition-colors reveal">
+                    <div class="flex justify-between items-center faq-header">
+                        <h4 class="text-lg font-bold text-white m-0 i18n" data-en="Do I need to have an idea before joining?" data-bn="জয়েন করার আগে কি আমার আইডিয়া থাকতে হবে?">Do I need to have an idea before joining?</h4>
+                        <i data-lucide="chevron-down" class="text-teal transition-transform duration-300 faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner pt-4 text-gray-400 i18n" data-en="No. BCSE helps you generate, filter, and validate ideas through our structured IdeaStation phase." data-bn="না। আইডিয়া স্টেশন ফেইজে আমরা আপনাকে আইডিয়া তৈরি ও ভ্যালিডেট করতে সাহায্য করব।">
+                            No. BCSE helps you generate, filter, and validate ideas through our structured IdeaStation phase.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ Item 2 -->
+                <div class="bg-card border border-white/5 rounded-xl p-6 cursor-pointer faq-item hover:border-teal/30 transition-colors reveal">
+                    <div class="flex justify-between items-center faq-header">
+                        <h4 class="text-lg font-bold text-white m-0 i18n" data-en="Is this a course?" data-bn="এটি কি কোনো কোর্স?">Is this a course?</h4>
+                        <i data-lucide="chevron-down" class="text-teal transition-transform duration-300 faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner pt-4 text-gray-400 i18n" data-en="No. BCSE is an execution-driven startup-building ecosystem. You will build alongside a team." data-bn="না। এটি একটি এক্সিকিউশন-ভিত্তিক স্টার্টআপ বিল্ডিং ইকোসিস্টেম। এখানে আপনি টিমের সাথে কাজ করবেন।">
+                            No. BCSE is an execution-driven startup-building ecosystem. You will build alongside a team.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ Item 3 -->
+                <div class="bg-card border border-white/5 rounded-xl p-6 cursor-pointer faq-item hover:border-teal/30 transition-colors reveal">
+                    <div class="flex justify-between items-center faq-header">
+                        <h4 class="text-lg font-bold text-white m-0 i18n" data-en="How much time do I need to commit?" data-bn="সপ্তাহে কত সময় দিতে হবে?">How much time do I need to commit?</h4>
+                        <i data-lucide="chevron-down" class="text-teal transition-transform duration-300 faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner pt-4 text-gray-400 i18n" data-en="Around 15–20 hours per week. This requires serious consistency." data-bn="সপ্তাহে ১৫–২০ ঘণ্টা। এর জন্য সিরিয়াস কনসিস্টেন্সি প্রয়োজন।">
+                            Around 15–20 hours per week. This requires serious consistency.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FINAL CTA -->
+    <section id="apply" class="py-32 relative overflow-hidden bg-darker border-t border-white/5 z-10">
+        <div class="absolute inset-0 bg-navy/10 blur-[100px] z-0 pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto px-6 relative z-10 text-center reveal">
+            
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal/50 bg-teal/10 text-teal text-sm font-bold uppercase tracking-widest mb-8 i18n"
+                 data-en="<span class='w-2 h-2 rounded-full bg-teal animate-pulse'></span> Application Open"
+                 data-bn="<span class='w-2 h-2 rounded-full bg-teal animate-pulse'></span> অ্যাপ্লিকেশন চলছে">
+                <span class="w-2 h-2 rounded-full bg-teal animate-pulse"></span>
+                Application Open
+            </div>
+
+            <h2 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6 i18n"
+                data-en="Cohort 1 Is Open" data-bn="কোহর্ট ১ ওপেন হয়েছে">
+                Cohort 1 Is Open
+            </h2>
+            <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto i18n"
+               data-en="Limited seats. Serious builders only. If you are ready to stop waiting and start building, this is your moment."
+               data-bn="সীমিত আসন। শুধুমাত্র সিরিয়াস বিল্ডারদের জন্য। আপনি যদি এক্সিকিউট করতে প্রস্তুত থাকেন, তবে এটাই আপনার সুযোগ।">
+                Limited seats. Serious builders only. If you are ready to stop waiting and start building, this is your moment.
+            </p>
+
+            <a href="#" class="btn-primary inline-flex justify-center items-center gap-2 px-10 py-5 rounded-lg font-bold text-white text-xl uppercase tracking-wide hover:scale-105 transition-transform">
+                <span class="i18n" data-en="Apply Now For Cohort 1" data-bn="কোহর্ট ১ এর জন্য অ্যাপ্লাই করুন">Apply Now For Cohort 1</span>
+                <i data-lucide="arrow-right" class="w-6 h-6"></i>
+            </a>
+            
+            <div class="mt-8 flex items-center justify-center gap-6 text-sm font-medium text-gray-500">
+                <span class="flex items-center gap-2 i18n" data-en="<i data-lucide='shield-check' class='w-4 h-4 text-teal'></i> Rigorous Selection" data-bn="<i data-lucide='shield-check' class='w-4 h-4 text-teal'></i> কঠোর সিলেকশন"><i data-lucide="shield-check" class="w-4 h-4 text-teal"></i> Rigorous Selection</span>
+                <span class="flex items-center gap-2 i18n" data-en="<i data-lucide='users' class='w-4 h-4 text-teal'></i> 30 Seats Only" data-bn="<i data-lucide='users' class='w-4 h-4 text-teal'></i> মাত্র ৩০টি আসন"><i data-lucide="users" class="w-4 h-4 text-teal"></i> 30 Seats Only</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark pt-16 pb-8 border-t border-white/5 z-10 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-teal rounded flex items-center justify-center font-bold text-white tracking-tighter text-lg">
+                        BC
+                    </div>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight text-white block">BCSE</span>
+                        <span class="text-xs text-teal font-semibold tracking-widest uppercase">Bangladesh Centre for Startup Execution</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-white/5 text-sm text-gray-500">
+                <p>&copy; 2026 BCSE. All rights reserved.</p>
+                <div class="font-medium tracking-widest uppercase flex items-center gap-3">
+                    <span>Build.</span><span>Create.</span><span>Ship.</span><span class="text-teal">Execute.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Initialize Icons
+        lucide.createIcons();
+
+        // 2. Custom Mouse Glow Effect
+        const glow = document.getElementById('mouseGlow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        // 3. Scroll Reveal Animation
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 4. 3D Hover Tilt Effect
+        document.querySelectorAll('.card-tilt').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+            });
+        });
+
+        // 5. Interactive FAQ Accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const answer = item.querySelector('.faq-answer');
+                const icon = item.querySelector('.faq-icon');
+                const isOpen = answer.classList.contains('open');
+                
+                // Close all other FAQs
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+                document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+                
+                // Open clicked FAQ if it was closed
+                if (!isOpen) {
+                    answer.classList.add('open');
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // 6. Language Toggle (EN/BN)
+        let currentLang = 'en';
+        const langToggleBtn = document.getElementById('langToggle');
+        const currentLangText = document.getElementById('currentLangText');
+        const i18nElements = document.querySelectorAll('.i18n');
+
+        langToggleBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'bn' : 'en';
+            currentLangText.innerText = currentLang === 'en' ? 'EN' : 'বাং';
+            
+            // Re-render Lucide icons if innerHTML changes text holding icons
+            i18nElements.forEach(el => {
+                // Add fade animation
+                el.classList.remove('lang-fade');
+                void el.offsetWidth; // trigger reflow
+                el.classList.add('lang-fade');
+                
+                el.innerHTML = el.getAttribute(`data-${currentLang}`);
+            });
+            
+            // Re-initialize icons inside newly rendered HTML
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
