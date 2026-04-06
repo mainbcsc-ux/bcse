@@ -15,12 +15,8 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        dark: '#0A0F1E',
-                        darker: '#050810',
-                        card: '#111827',
                         navy: '#0C447C',
                         teal: '#1D9E75',
-                        light: '#EAEAEA',
                     }
                 }
             }
@@ -28,84 +24,87 @@
     </script>
     <style>
         body {
-            background-color: #050810;
-            color: #EAEAEA;
+            background-color: #F3F4F6; /* Light gray body bg */
+            color: #111827; /* Dark text */
         }
 
         .btn-primary {
             background-color: #1D9E75;
-            box-shadow: 0 0 20px rgba(29, 158, 117, 0.3);
+            box-shadow: 0 4px 14px rgba(29, 158, 117, 0.25);
             transition: all 0.3s ease;
+            color: #FFFFFF !important;
         }
         .btn-primary:hover {
             background-color: #168560;
-            box-shadow: 0 0 30px rgba(29, 158, 117, 0.6);
+            box-shadow: 0 6px 20px rgba(29, 158, 117, 0.4);
             transform: translateY(-2px);
         }
         
         .btn-secondary {
-            background-color: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            color: #374151;
             transition: all 0.3s ease;
         }
         .btn-secondary:hover {
             border-color: #1D9E75;
             background-color: rgba(29, 158, 117, 0.05);
+            color: #1D9E75;
         }
 
-        /* Custom Scrollbar */
+        /* Custom Scrollbar for Light Theme */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(29,158,117,0.5); }
     </style>
 </head>
 <body class="antialiased selection:bg-teal selection:text-white min-h-screen flex items-center justify-center p-4 sm:p-8">
 
-    <div class="w-full max-w-3xl bg-dark border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+    <div class="w-full max-w-3xl bg-white border border-gray-200 rounded-2xl shadow-xl flex flex-col overflow-hidden">
         
         <!-- Header -->
-        <div class="flex justify-between items-center p-6 border-b border-white/10 bg-darker">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-slate-50">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-teal rounded flex items-center justify-center font-bold text-white tracking-tighter text-lg">
+                <div class="w-10 h-10 bg-teal rounded flex items-center justify-center font-bold text-white tracking-tighter text-lg shadow-sm">
                     BC
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-white mb-1">BCSE Application: Cohort 1</h3>
-                    <p class="text-xs text-gray-400">১৭ সপ্তাহের ইনটেনসিভ স্টার্টআপ এক্সিলারেশন প্রোগ্রাম</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">BCSE Application: Cohort 1</h3>
+                    <p class="text-xs text-gray-500">১৭ সপ্তাহের ইনটেনসিভ স্টার্টআপ এক্সিলারেশন প্রোগ্রাম</p>
                 </div>
             </div>
         </div>
 
         <!-- Progress Bar -->
-        <div class="w-full bg-card h-1.5">
+        <div class="w-full bg-gray-200 h-1.5">
             <div id="formProgress" class="h-full bg-teal transition-all duration-300" style="width: 16.66%;"></div>
         </div>
 
         <!-- Form Body -->
-        <div class="flex-1 p-6 md:p-8">
+        <div class="flex-1 p-6 md:p-8 bg-white">
             
             <form id="bcseForm" class="space-y-6">
                 
                 <!-- STEP 1: Basic Info -->
                 <div class="form-step" data-step="1">
-                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/20 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span> বেসিক ইনফরমেশন</h4>
+                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/10 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs border border-teal/20">1</span> বেসিক ইনফরমেশন</h4>
                     <div class="grid md:grid-cols-2 gap-5">
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">পুরো নাম (Full Name) *</label>
-                            <input type="text" name="fullName" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all">
+                            <label class="text-sm font-semibold text-gray-700">পুরো নাম (Full Name) *</label>
+                            <input type="text" name="fullName" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">ইমেইল (Email Address) *</label>
-                            <input type="email" name="email" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all">
+                            <label class="text-sm font-semibold text-gray-700">ইমেইল (Email Address) *</label>
+                            <input type="email" name="email" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">ফোন / WhatsApp নম্বর *</label>
-                            <input type="tel" name="phone" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all">
+                            <label class="text-sm font-semibold text-gray-700">ফোন / WhatsApp নম্বর *</label>
+                            <input type="tel" name="phone" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">বর্তমান শহর *</label>
-                            <select name="city" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all appearance-none">
+                            <label class="text-sm font-semibold text-gray-700">বর্তমান শহর *</label>
+                            <select name="city" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all appearance-none shadow-sm">
                                 <option value="" disabled selected>শহর নির্বাচন করুন...</option>
                                 <option value="Dhaka">ঢাকা</option>
                                 <option value="Chattogram">চট্টগ্রাম</option>
@@ -115,8 +114,8 @@
                             </select>
                         </div>
                         <div class="space-y-2 md:col-span-2">
-                            <label class="text-sm font-medium text-gray-300">বর্তমানে কী করছো? *</label>
-                            <select name="occupation" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all appearance-none">
+                            <label class="text-sm font-semibold text-gray-700">বর্তমানে কী করছো? *</label>
+                            <select name="occupation" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all appearance-none shadow-sm">
                                 <option value="" disabled selected>পেশা নির্বাচন করুন...</option>
                                 <option value="Student">Student (ছাত্র/ছাত্রী)</option>
                                 <option value="Job">Job (চাকরিজীবী)</option>
@@ -130,73 +129,73 @@
 
                 <!-- STEP 2: Role Selection -->
                 <div class="form-step hidden" data-step="2">
-                    <h4 class="text-lg font-bold text-teal mb-2 flex items-center gap-2"><span class="bg-teal/20 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span> রোল নির্বাচন</h4>
-                    <p class="text-xs text-gray-400 mb-5">একটি স্টার্টআপে ৬ ধরনের স্কিলের মানুষ লাগে। নিজের শক্তির জায়গাটি বেছে নিন (যেকোনো একটি)। *</p>
+                    <h4 class="text-lg font-bold text-teal mb-2 flex items-center gap-2"><span class="bg-teal/10 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs border border-teal/20">2</span> রোল নির্বাচন</h4>
+                    <p class="text-xs text-gray-500 mb-5">একটি স্টার্টআপে ৬ ধরনের স্কিলের মানুষ লাগে। নিজের শক্তির জায়গাটি বেছে নিন (যেকোনো একটি)। *</p>
                     
                     <div class="grid sm:grid-cols-2 gap-4">
                         <label class="relative cursor-pointer group">
                             <input type="radio" name="role" value="Marketing Lead" class="peer sr-only" required>
-                            <div class="p-4 rounded-xl border border-white/10 bg-card peer-checked:border-teal peer-checked:bg-teal/10 hover:border-white/30 transition-all">
+                            <div class="p-4 rounded-xl border border-gray-200 bg-white peer-checked:border-teal peer-checked:bg-teal/5 hover:border-teal/30 transition-all shadow-sm">
                                 <div class="flex items-center gap-3 mb-1">
                                     <i data-lucide="megaphone" class="w-5 h-5 text-teal"></i>
-                                    <span class="font-bold text-white text-sm">Marketing Lead</span>
+                                    <span class="font-bold text-gray-900 text-sm">Marketing Lead</span>
                                 </div>
-                                <p class="text-xs text-gray-400 ml-8">ব্র্যান্ডিং, কাস্টমার আনা</p>
+                                <p class="text-xs text-gray-500 ml-8">ব্র্যান্ডিং, কাস্টমার আনা</p>
                             </div>
                         </label>
 
                         <label class="relative cursor-pointer group">
                             <input type="radio" name="role" value="Content Creator" class="peer sr-only">
-                            <div class="p-4 rounded-xl border border-white/10 bg-card peer-checked:border-teal peer-checked:bg-teal/10 hover:border-white/30 transition-all">
+                            <div class="p-4 rounded-xl border border-gray-200 bg-white peer-checked:border-teal peer-checked:bg-teal/5 hover:border-teal/30 transition-all shadow-sm">
                                 <div class="flex items-center gap-3 mb-1">
                                     <i data-lucide="pen-tool" class="w-5 h-5 text-teal"></i>
-                                    <span class="font-bold text-white text-sm">Content Creator</span>
+                                    <span class="font-bold text-gray-900 text-sm">Content Creator</span>
                                 </div>
-                                <p class="text-xs text-gray-400 ml-8">কন্টেন্ট, স্টোরিটেলিং</p>
+                                <p class="text-xs text-gray-500 ml-8">কন্টেন্ট, স্টোরিটেলিং</p>
                             </div>
                         </label>
 
                         <label class="relative cursor-pointer group">
                             <input type="radio" name="role" value="Execution Lead" class="peer sr-only">
-                            <div class="p-4 rounded-xl border border-white/10 bg-card peer-checked:border-teal peer-checked:bg-teal/10 hover:border-white/30 transition-all">
+                            <div class="p-4 rounded-xl border border-gray-200 bg-white peer-checked:border-teal peer-checked:bg-teal/5 hover:border-teal/30 transition-all shadow-sm">
                                 <div class="flex items-center gap-3 mb-1">
                                     <i data-lucide="check-square" class="w-5 h-5 text-teal"></i>
-                                    <span class="font-bold text-white text-sm">Execution Lead</span>
+                                    <span class="font-bold text-gray-900 text-sm">Execution Lead</span>
                                 </div>
-                                <p class="text-xs text-gray-400 ml-8">প্রজেক্ট ম্যানেজমেন্ট</p>
+                                <p class="text-xs text-gray-500 ml-8">প্রজেক্ট ম্যানেজমেন্ট</p>
                             </div>
                         </label>
 
                         <label class="relative cursor-pointer group">
                             <input type="radio" name="role" value="Tech/Product" class="peer sr-only">
-                            <div class="p-4 rounded-xl border border-white/10 bg-card peer-checked:border-teal peer-checked:bg-teal/10 hover:border-white/30 transition-all">
+                            <div class="p-4 rounded-xl border border-gray-200 bg-white peer-checked:border-teal peer-checked:bg-teal/5 hover:border-teal/30 transition-all shadow-sm">
                                 <div class="flex items-center gap-3 mb-1">
                                     <i data-lucide="code-2" class="w-5 h-5 text-teal"></i>
-                                    <span class="font-bold text-white text-sm">Tech / Product</span>
+                                    <span class="font-bold text-gray-900 text-sm">Tech / Product</span>
                                 </div>
-                                <p class="text-xs text-gray-400 ml-8">কোডিং/নো-কোড, ডিজাইন</p>
+                                <p class="text-xs text-gray-500 ml-8">কোডিং/নো-কোড, ডিজাইন</p>
                             </div>
                         </label>
 
                         <label class="relative cursor-pointer group">
                             <input type="radio" name="role" value="Finance/Legal" class="peer sr-only">
-                            <div class="p-4 rounded-xl border border-white/10 bg-card peer-checked:border-teal peer-checked:bg-teal/10 hover:border-white/30 transition-all">
+                            <div class="p-4 rounded-xl border border-gray-200 bg-white peer-checked:border-teal peer-checked:bg-teal/5 hover:border-teal/30 transition-all shadow-sm">
                                 <div class="flex items-center gap-3 mb-1">
                                     <i data-lucide="bar-chart-3" class="w-5 h-5 text-teal"></i>
-                                    <span class="font-bold text-white text-sm">Finance & Legal</span>
+                                    <span class="font-bold text-gray-900 text-sm">Finance & Legal</span>
                                 </div>
-                                <p class="text-xs text-gray-400 ml-8">বাজেট, রেভিনিউ মডেল</p>
+                                <p class="text-xs text-gray-500 ml-8">বাজেট, রেভিনিউ মডেল</p>
                             </div>
                         </label>
 
                         <label class="relative cursor-pointer group">
                             <input type="radio" name="role" value="Sales/BD" class="peer sr-only">
-                            <div class="p-4 rounded-xl border border-white/10 bg-card peer-checked:border-teal peer-checked:bg-teal/10 hover:border-white/30 transition-all">
+                            <div class="p-4 rounded-xl border border-gray-200 bg-white peer-checked:border-teal peer-checked:bg-teal/5 hover:border-teal/30 transition-all shadow-sm">
                                 <div class="flex items-center gap-3 mb-1">
                                     <i data-lucide="handshake" class="w-5 h-5 text-teal"></i>
-                                    <span class="font-bold text-white text-sm">Sales & BD</span>
+                                    <span class="font-bold text-gray-900 text-sm">Sales & BD</span>
                                 </div>
-                                <p class="text-xs text-gray-400 ml-8">ক্লায়েন্ট, পার্টনারশিপ</p>
+                                <p class="text-xs text-gray-500 ml-8">ক্লায়েন্ট, পার্টনারশিপ</p>
                             </div>
                         </label>
                     </div>
@@ -204,26 +203,26 @@
 
                 <!-- STEP 3: Motivation -->
                 <div class="form-step hidden" data-step="3">
-                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/20 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span> মোটিভেশন ও মাইন্ডসেট</h4>
+                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/10 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs border border-teal/20">3</span> মোটিভেশন ও মাইন্ডসেট</h4>
                     
                     <div class="space-y-6">
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">কেন তুমি BCSE-এর এই প্রোগ্রামে যোগ দিতে চাও? *</label>
+                            <label class="text-sm font-semibold text-gray-700">কেন তুমি BCSE-এর এই প্রোগ্রামে যোগ দিতে চাও? *</label>
                             <p class="text-[11px] text-gray-500 -mt-1 mb-2">Hint: জেনেরিক উত্তর না দিয়ে নিজের স্পেসিফিক কারণটি বলো (১৫০-২৫০ শব্দ)</p>
-                            <textarea name="motivation" rows="3" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <textarea name="motivation" rows="3" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">তুমি কখনো কোনো প্রজেক্ট বা ইনিশিয়েটিভ নিজে শুরু করেছিলে? কী হয়েছিল? *</label>
+                            <label class="text-sm font-semibold text-gray-700">তুমি কখনো কোনো প্রজেক্ট বা ইনিশিয়েটিভ নিজে শুরু করেছিলে? কী হয়েছিল? *</label>
                             <p class="text-[11px] text-gray-500 -mt-1 mb-2">Hint: সাকসেস বা ফেইল—দুটোই গ্রহণযোগ্য, শুধু তোমার অভিজ্ঞতা শেয়ার করো</p>
-                            <textarea name="pastProject" rows="3" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <textarea name="pastProject" rows="3" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">তোমার কাছে কোনো স্টার্টআপ আইডিয়া থাকলে সংক্ষেপে বলো। আইডিয়া না থাকলে—কোন সমস্যাটা তোমাকে সবচেয়ে বেশি bother করে? *</label>
-                            <textarea name="startupIdea" rows="3" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <label class="text-sm font-semibold text-gray-700">তোমার কাছে কোনো স্টার্টআপ আইডিয়া থাকলে সংক্ষেপে বলো। আইডিয়া না থাকলে—কোন সমস্যাটা তোমাকে সবচেয়ে বেশি bother করে? *</label>
+                            <textarea name="startupIdea" rows="3" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                             <div class="flex justify-end mt-1">
-                                <button type="button" id="enhanceIdeaBtn" onclick="enhanceIdea()" class="text-teal hover:text-white transition-colors flex items-center gap-1.5 px-3 py-1.5 bg-teal/5 border border-teal/20 rounded hover:bg-teal/20">
+                                <button type="button" id="enhanceIdeaBtn" onclick="enhanceIdea()" class="text-teal hover:text-teal-700 transition-colors flex items-center gap-1.5 px-3 py-1.5 bg-teal/5 border border-teal/20 rounded hover:bg-teal/10">
                                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                                     <span class="text-xs font-bold">✨ Get AI Feedback</span>
                                 </button>
@@ -235,48 +234,48 @@
 
                 <!-- STEP 4: Skill Self-Assessment -->
                 <div class="form-step hidden" data-step="4">
-                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/20 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span> স্কিল যাচাই</h4>
+                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/10 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs border border-teal/20">4</span> স্কিল যাচাই</h4>
                     
                     <div class="space-y-6">
                         <div class="space-y-4">
-                            <label class="text-sm font-medium text-gray-300 block">সিলেক্ট করা রোলে তোমার বর্তমান স্কিল লেভেল কেমন? (১-১০) *</label>
+                            <label class="text-sm font-semibold text-gray-700 block">সিলেক্ট করা রোলে তোমার বর্তমান স্কিল লেভেল কেমন? (১-১০) *</label>
                             <div class="flex items-center gap-4">
-                                <span class="text-xs text-gray-500">Beginner (1)</span>
-                                <input type="range" name="skillLevel" min="1" max="10" value="5" class="w-full h-2 bg-card rounded-lg appearance-none cursor-pointer accent-teal">
-                                <span class="text-xs text-gray-500">Expert (10)</span>
+                                <span class="text-xs text-gray-500 font-medium">Beginner (1)</span>
+                                <input type="range" name="skillLevel" min="1" max="10" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal">
+                                <span class="text-xs text-gray-500 font-medium">Expert (10)</span>
                             </div>
                             <div class="text-center font-bold text-teal text-xl" id="skillValueDisplay">5</div>
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">কেন নিজেকে এই রেটিং দিলে? কারণ ব্যাখ্যা করো: *</label>
-                            <textarea name="skillReason" rows="2" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <label class="text-sm font-semibold text-gray-700">কেন নিজেকে এই রেটিং দিলে? কারণ ব্যাখ্যা করো: *</label>
+                            <textarea name="skillReason" rows="2" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">তোমার বাছাই করা রোলের সাথে প্রাসঙ্গিক কোনো কাজ কি আগে করেছো? *</label>
+                            <label class="text-sm font-semibold text-gray-700">তোমার বাছাই করা রোলের সাথে প্রাসঙ্গিক কোনো কাজ কি আগে করেছো? *</label>
                             <p class="text-[11px] text-gray-500 -mt-1 mb-2">Hint: পোর্টফোলিও লিংক বা উদাহরণ দাও। না থাকলে 'নেই' লেখো।</p>
-                            <textarea name="portfolio" rows="2" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <textarea name="portfolio" rows="2" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- STEP 5: Commitment -->
                 <div class="form-step hidden" data-step="5">
-                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/20 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span> কমিটমেন্ট এবং টিমওয়ার্ক</h4>
+                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/10 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs border border-teal/20">5</span> কমিটমেন্ট এবং টিমওয়ার্ক</h4>
                     
                     <div class="space-y-6">
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">প্রতি সপ্তাহে ১৫-২০ ঘণ্টা সময় দিতে হবে (৪ মাস)। কোথা থেকে এই সময় বের করবে? *</label>
+                            <label class="text-sm font-semibold text-gray-700">প্রতি সপ্তাহে ১৫-২০ ঘণ্টা সময় দিতে হবে (৪ মাস)। কোথা থেকে এই সময় বের করবে? *</label>
                             <p class="text-[11px] text-gray-500 -mt-1 mb-2">Hint: ভাসা ভাসা উত্তর না দিয়ে স্পেসিফিক প্ল্যান বলো</p>
-                            <textarea name="timeCommitment" rows="2" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <textarea name="timeCommitment" rows="2" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">টিমে কাজ করতে গিয়ে কনফ্লিক্টে (মতবিরোধ) পড়েছিলে এমন একটি ঘটনার কথা বলো। কীভাবে হ্যান্ডেল করেছিলে? *</label>
-                            <textarea name="conflictResolution" rows="3" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <label class="text-sm font-semibold text-gray-700">টিমে কাজ করতে গিয়ে কনফ্লিক্টে (মতবিরোধ) পড়েছিলে এমন একটি ঘটনার কথা বলো। কীভাবে হ্যান্ডেল করেছিলে? *</label>
+                            <textarea name="conflictResolution" rows="3" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                             <div class="flex justify-end mt-1">
-                                <button type="button" id="polishBtn" onclick="polishAnswer('conflictResolution', 'polishBtn', 'polishResult')" class="text-teal hover:text-white transition-colors flex items-center gap-1.5 px-3 py-1.5 bg-teal/5 border border-teal/20 rounded hover:bg-teal/20">
+                                <button type="button" id="polishBtn" onclick="polishAnswer('conflictResolution', 'polishBtn', 'polishResult')" class="text-teal hover:text-teal-700 transition-colors flex items-center gap-1.5 px-3 py-1.5 bg-teal/5 border border-teal/20 rounded hover:bg-teal/10">
                                     <i data-lucide="wand-2" class="w-4 h-4"></i>
                                     <span class="text-xs font-bold">✨ Polish Answer</span>
                                 </button>
@@ -285,30 +284,30 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-300">BCSE থেকে ৪ মাস পর তুমি নিজেকে কোথায় দেখতে চাও? *</label>
-                            <textarea name="futureVision" rows="2" required class="w-full bg-card border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all"></textarea>
+                            <label class="text-sm font-semibold text-gray-700">BCSE থেকে ৪ মাস পর তুমি নিজেকে কোথায় দেখতে চাও? *</label>
+                            <textarea name="futureVision" rows="2" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all shadow-sm"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- STEP 6: Final Consent -->
                 <div class="form-step hidden" data-step="6">
-                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/20 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs">6</span> ফাইনাল কনফার্মেশন</h4>
+                    <h4 class="text-lg font-bold text-teal mb-4 flex items-center gap-2"><span class="bg-teal/10 text-teal w-6 h-6 rounded-full flex items-center justify-center text-xs border border-teal/20">6</span> ফাইনাল কনফার্মেশন</h4>
                     
-                    <div class="space-y-5 bg-card/30 p-5 rounded-xl border border-white/5">
+                    <div class="space-y-5 bg-slate-50 p-5 rounded-xl border border-gray-200 shadow-sm">
                         <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" name="feeConsent" required class="mt-1 w-4 h-4 rounded border-gray-600 bg-dark text-teal focus:ring-teal">
-                            <span class="text-sm text-gray-300 group-hover:text-white transition-colors">আমি কনফার্ম করছি যে, প্রোগ্রামের স্পেশাল এন্ট্রি ফি ৳৩,০০০ দিতে আমি প্রস্তুত। *</span>
+                            <input type="checkbox" name="feeConsent" required class="mt-1 w-4 h-4 rounded border-gray-300 bg-white text-teal focus:ring-teal">
+                            <span class="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">আমি কনফার্ম করছি যে, প্রোগ্রামের স্পেশাল এন্ট্রি ফি ৳৩,০০০ দিতে আমি প্রস্তুত। *</span>
                         </label>
 
                         <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" name="saturdayConsent" required class="mt-1 w-4 h-4 rounded border-gray-600 bg-dark text-teal focus:ring-teal">
-                            <span class="text-sm text-gray-300 group-hover:text-white transition-colors">আমি শনিবারের ফিজিক্যাল সেশনগুলোতে (ঢাকায়) উপস্থিত থাকতে পারব। *</span>
+                            <input type="checkbox" name="saturdayConsent" required class="mt-1 w-4 h-4 rounded border-gray-300 bg-white text-teal focus:ring-teal">
+                            <span class="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">আমি শনিবারের ফিজিক্যাল সেশনগুলোতে (ঢাকায়) উপস্থিত থাকতে পারব। *</span>
                         </label>
                         
-                        <div class="space-y-2 pt-4 border-t border-white/10">
-                            <label class="text-sm font-medium text-gray-300">তুমি BCSE সম্পর্কে কোথা থেকে জেনেছো? *</label>
-                            <select name="source" required class="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all appearance-none">
+                        <div class="space-y-2 pt-4 border-t border-gray-200">
+                            <label class="text-sm font-semibold text-gray-700">তুমি BCSE সম্পর্কে কোথা থেকে জেনেছো? *</label>
+                            <select name="source" required class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal transition-all appearance-none shadow-sm">
                                 <option value="" disabled selected>নির্বাচন করুন...</option>
                                 <option value="Facebook">Facebook</option>
                                 <option value="LinkedIn">LinkedIn</option>
@@ -323,26 +322,26 @@
 
             <!-- Success Message (Hidden initially) -->
             <div id="successMessage" class="hidden text-center py-10">
-                <div class="w-20 h-20 bg-teal/20 text-teal rounded-full flex items-center justify-center mx-auto mb-6">
+                <div class="w-20 h-20 bg-teal/10 text-teal rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                     <i data-lucide="check-circle" class="w-10 h-10"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-2">Application Submitted!</h3>
-                <p class="text-gray-400 mb-6">ধন্যবাদ! আমরা আগামী ৩ দিনের মধ্যে তোমার সাথে ইমেইলে যোগাযোগ করব।</p>
-                <a href="index.html" class="btn-secondary px-6 py-2 rounded-lg text-white text-sm font-medium">Return to Home</a>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h3>
+                <p class="text-gray-600 mb-6">ধন্যবাদ! আমরা আগামী ৩ দিনের মধ্যে তোমার সাথে ইমেইলে যোগাযোগ করব।</p>
+                <a href="index.html" class="btn-secondary px-6 py-2 rounded-lg text-sm font-semibold shadow-sm">Return to Home</a>
             </div>
 
         </div>
 
         <!-- Footer / Navigation Controls -->
-        <div id="formControls" class="p-6 border-t border-white/10 bg-darker flex justify-between items-center">
-            <button type="button" id="prevBtn" class="text-gray-400 hover:text-white text-sm font-medium hidden transition-colors px-4 py-2">
+        <div id="formControls" class="p-6 border-t border-gray-200 bg-slate-50 flex justify-between items-center">
+            <button type="button" id="prevBtn" class="text-gray-500 hover:text-gray-900 text-sm font-semibold hidden transition-colors px-4 py-2">
                 Back
             </button>
             <div class="flex-1"></div> <!-- Spacer -->
-            <button type="button" id="nextBtn" class="btn-primary px-8 py-3 rounded-lg text-white font-bold shadow-lg flex items-center gap-2">
+            <button type="button" id="nextBtn" class="btn-primary px-8 py-3 rounded-lg text-white font-bold flex items-center gap-2">
                 Next Step <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
-            <button type="button" id="submitBtn" class="btn-primary px-8 py-3 rounded-lg text-white font-bold shadow-lg flex items-center gap-2 hidden relative overflow-hidden">
+            <button type="button" id="submitBtn" class="btn-primary px-8 py-3 rounded-lg text-white font-bold flex items-center gap-2 hidden relative overflow-hidden">
                 <span id="submitText">Submit Application</span>
                 <!-- Spinner (hidden by default) -->
                 <svg id="submitSpinner" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden absolute inset-0 m-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -392,7 +391,7 @@
             const btn = document.getElementById('enhanceIdeaBtn');
 
             if (!idea) {
-                resultDiv.innerHTML = "<span class='text-red-400 text-xs font-medium'>Please write your idea first!</span>";
+                resultDiv.innerHTML = "<span class='text-red-500 text-xs font-medium'>Please write your idea first!</span>";
                 resultDiv.classList.remove('hidden');
                 return;
             }
@@ -407,7 +406,7 @@
 
             const response = await fetchGemini(prompt);
 
-            resultDiv.innerHTML = `<div class='p-4 bg-teal/10 border border-teal/30 rounded-lg text-sm text-gray-300 leading-relaxed'><strong class='text-teal block mb-1'>✨ AI Advisor Feedback:</strong> ${response}</div>`;
+            resultDiv.innerHTML = `<div class='p-4 bg-teal/5 border border-teal/20 rounded-lg text-sm text-gray-700 leading-relaxed shadow-sm'><strong class='text-teal block mb-1'>✨ AI Advisor Feedback:</strong> ${response}</div>`;
 
             btn.disabled = false;
             btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i> <span class="text-xs font-bold">✨ Get AI Feedback</span>`;
@@ -421,7 +420,7 @@
             const btn = document.getElementById(btnId);
 
             if (!text) {
-                resultDiv.innerHTML = "<span class='text-red-400 text-xs font-medium'>Please write something first!</span>";
+                resultDiv.innerHTML = "<span class='text-red-500 text-xs font-medium'>Please write something first!</span>";
                 resultDiv.classList.remove('hidden');
                 return;
             }
@@ -439,10 +438,10 @@
             const safeResponse = response.replace(/\`/g, '\\`').replace(/'/g, "\\'");
 
             resultDiv.innerHTML = `
-                <div class='p-4 bg-card border border-white/20 rounded-lg text-sm text-gray-300 mt-2 shadow-lg'>
-                    <strong class='text-white block mb-2'>✨ Suggested Polish:</strong>
-                    <p class='mb-4 text-gray-400'>${response}</p>
-                    <button type="button" onclick="document.querySelector('textarea[name=\\'${fieldName}\\']').value = \`${safeResponse}\`; document.getElementById('${resultId}').classList.add('hidden');" class="text-xs bg-teal hover:bg-teal/80 text-white px-4 py-2 rounded-md transition-colors font-semibold shadow-md flex items-center gap-2">
+                <div class='p-4 bg-slate-50 border border-gray-200 rounded-lg text-sm text-gray-700 mt-2 shadow-sm'>
+                    <strong class='text-gray-900 block mb-2'>✨ Suggested Polish:</strong>
+                    <p class='mb-4 text-gray-600'>${response}</p>
+                    <button type="button" onclick="document.querySelector('textarea[name=\\'${fieldName}\\']').value = \`${safeResponse}\`; document.getElementById('${resultId}').classList.add('hidden');" class="text-xs bg-teal hover:bg-teal-700 text-white px-4 py-2 rounded-md transition-colors font-semibold shadow-sm flex items-center gap-2">
                         Apply This Text <i data-lucide="check" class="w-3 h-3"></i>
                     </button>
                 </div>`;
