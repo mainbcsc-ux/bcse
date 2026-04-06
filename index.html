@@ -212,37 +212,75 @@
 
     <div class="mouse-glow hidden md:block" id="mouseGlow"></div>
 
-    <!-- Navigation -->
-<!-- Logo -->
-<div class="flex items-center gap-3">
-    <img src="./logo.png" 
-         alt="BCSE Logo" 
-         class="h-20 w-auto object-contain">
+<!-- Navigation -->
+<nav class="fixed w-full z-50 top-0 border-b border-gray-200 bg-white/90 backdrop-blur-md shadow-sm">
+    
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <img src="./logo.png" 
+                 alt="BCSE Logo" 
+                 class="h-10 w-auto object-contain">
 
-    <span class="font-bold text-xl tracking-tight text-gray-900">
-    </span>
-</div>
-
-            <!-- Nav Links -->
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-                <a href="#problem" class="hover:text-teal transition-colors i18n" data-en="The Problem" data-bn="সমস্যা">The Problem</a>
-                <a href="#how-it-works" class="hover:text-teal transition-colors i18n" data-en="How It Works" data-bn="কীভাবে কাজ করে">How It Works</a>
-                <a href="#roles" class="hover:text-teal transition-colors i18n" data-en="Roles" data-bn="রোলসমূহ">Roles</a>
-                <a href="#curriculum" class="hover:text-teal transition-colors i18n" data-en="Tools & Skills" data-bn="টুলস ও স্কিলস">Tools & Skills</a>
-                
-                <!-- Language Toggle -->
-                <button id="langToggle" class="flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-full px-3 py-1.5 hover:border-teal transition-colors">
-                    <i data-lucide="globe" class="w-4 h-4 text-teal"></i>
-                    <span id="currentLangText" class="text-gray-900 text-xs font-bold tracking-widest">EN</span>
-                </button>
-            </div>
-            
-            <!-- CTA Button -->
-            <a href="./form.html" target="_blank" class="btn-primary text-sm px-5 py-2.5 rounded-md font-semibold text-white i18n transition-transform duration-300 hover:scale-105" data-en="Apply Now" data-bn="অ্যাপ্লাই করুন">
-                Apply Now
-            </a>
+            <span class="font-bold text-xl tracking-tight text-gray-900">
+                BCSE
+            </span>
         </div>
-    </nav>
+
+        <!-- Nav Links -->
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+            <a href="#problem" 
+               class="hover:text-teal transition-colors i18n" 
+               data-en="The Problem" 
+               data-bn="সমস্যা">
+                The Problem
+            </a>
+
+            <a href="#how-it-works" 
+               class="hover:text-teal transition-colors i18n" 
+               data-en="How It Works" 
+               data-bn="কীভাবে কাজ করে">
+                How It Works
+            </a>
+
+            <a href="#roles" 
+               class="hover:text-teal transition-colors i18n" 
+               data-en="Roles" 
+               data-bn="রোলসমূহ">
+                Roles
+            </a>
+
+            <a href="#curriculum" 
+               class="hover:text-teal transition-colors i18n" 
+               data-en="Tools & Skills" 
+               data-bn="টুলস ও স্কিলস">
+                Tools & Skills
+            </a>
+            
+            <!-- Language Toggle -->
+            <button id="langToggle" 
+                    class="flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-full px-3 py-1.5 hover:border-teal transition-colors">
+                
+                <i data-lucide="globe" class="w-4 h-4 text-teal"></i>
+                <span id="currentLangText" 
+                      class="text-gray-900 text-xs font-bold tracking-widest">
+                    EN
+                </span>
+            </button>
+        </div>
+        
+        <!-- CTA Button -->
+        <a href="./form.html" 
+           target="_blank" 
+           class="btn-primary text-sm px-5 py-2.5 rounded-md font-semibold text-white i18n transition-transform duration-300 hover:scale-105" 
+           data-en="Apply Now" 
+           data-bn="অ্যাপ্লাই করুন">
+            Apply Now
+        </a>
+
+    </div>
+</nav>
 
     <!-- 1. HERO SECTION -->
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-slate-50">
