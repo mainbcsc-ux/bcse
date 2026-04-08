@@ -1107,21 +1107,17 @@
 
     <!-- VIDEO MODAL -->
     <div id="videoModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
-        <div class="absolute inset-0 bg-gray-900/90 backdrop-blur-sm" onclick="closeVideoModal()"></div>
+        <!-- Modal Backdrop -->
+        <div class="absolute inset-0 bg-gray-900/95 backdrop-blur-md" onclick="closeVideoModal()"></div>
+        
         <div class="relative w-full max-w-4xl bg-black rounded-2xl shadow-2xl overflow-hidden aspect-video transform scale-95 transition-transform duration-300" id="videoBox">
-            <button onclick="closeVideoModal()" class="absolute -top-12 right-0 text-white hover:text-teal transition-colors">
-                <i data-lucide="x-circle" class="w-8 h-8"></i>
+            <!-- Close Button -->
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-50 text-white/50 hover:text-white bg-black/50 p-2 rounded-full transition-all">
+                <i data-lucide="x" class="w-6 h-6"></i>
             </button>
-            <!-- Placeholder for Video -->
-            <div class="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white relative">
-                <div class="absolute inset-0 bg-grid opacity-20"></div>
-                <i data-lucide="play" class="w-20 h-20 text-teal mb-4 animate-pulse"></i>
-                <h3 class="text-2xl font-bold tracking-widest uppercase">BCSE Manifesto</h3>
-                <p class="text-gray-400 mt-2">Embed your YouTube/Vimeo video here</p>
-            </div>
-            <!-- If embedding youtube:
-            <iframe class="w-full h-full" src="YOUR_YOUTUBE_LINK?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            -->
+            
+            <!-- Video Container (Jekhane Iframe inject hobe) -->
+            <div id="videoContainer" class="w-full h-full"></div>
         </div>
     </div>
 
@@ -1246,14 +1242,25 @@
         // Video Modal Logic
         const videoModal = document.getElementById('videoModal');
         const videoBox = document.getElementById('videoBox');
-        
+        const videoContainer = document.getElementById('videoContainer');
+
         function openVideoModal() {
+            // YouTube Privacy-Enhanced mode use kora hoyeche error fix korar jonno
+            videoContainer.innerHTML = `<iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube-nocookie.com/embed/HE1K_YTf5WM?autoplay=1&rel=0&modestbranding=1" 
+                title="BCSE Manifesto" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen></iframe>`;
+            
             videoModal.classList.remove('hidden');
             setTimeout(() => {
                 videoModal.classList.remove('opacity-0');
                 videoBox.classList.add('modal-scale-enter');
             }, 10);
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Scroll disable korar jonno
         }
 
         function closeVideoModal() {
@@ -1261,7 +1268,8 @@
             videoBox.classList.remove('modal-scale-enter');
             setTimeout(() => {
                 videoModal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
+                videoContainer.innerHTML = ''; // Video setup clear kore deya hoyeche jate background sound off hoy
+                document.body.style.overflow = 'auto'; // Scroll enable korar jonno
             }, 300);
         }
 
